@@ -20,7 +20,7 @@ func routes() *http.ServeMux {
 
 	// User
 	mux.HandleFunc("/user-create/", controller.UserCreate)
-	// mux.HandleFunc("/user-login/", controller.UserLogin)
+	mux.HandleFunc("/user-login/", controller.UserLogin)
 	// mux.HandleFunc("/user-logout/", controller.UserLogout)
 
 	// View User

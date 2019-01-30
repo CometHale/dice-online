@@ -37,6 +37,21 @@ func (repo *UserRepository) Get(id int64) (*domain.User, error) {
 	return &domain.User{Email: email, Username: username, ID: id, HighScore: highscore}, nil
 }
 
+// GetPassword queries for and returns the password associated with the given Email
+func (repo *UserRepository) GetPassword(email string) (string, error) {
+	// This kind of function should not exist in any production-ready application
+	stmt := `SELECT password FROM users WHERE email = $1`
+	var password string
+
+	err := repo.db.QueryRow(stmt).Scan(&password)
+
+	if err != nil {
+		log.Panicln(err)
+	}
+
+	return password, nil
+}
+
 // GetAll queries for and returns all Users
 func (repo *UserRepository) GetAll() ([]*domain.User, error) {
 	stmt := `SELECT email, username, highscore, id FROM users `

@@ -28,8 +28,8 @@ func Configure(s Session) {
 }
 
 // Instance returns a new session, never returns an error
-func Instance(r *http.Request) *sessions.Session {
-	session, _ := Store.Get(r, Name)
+func Instance(r *http.Request, sessionName string) *sessions.Session {
+	session, _ := Store.Get(r, sessionName)
 	return session
 }
 

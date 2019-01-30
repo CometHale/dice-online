@@ -10,6 +10,8 @@ import (
 	"strconv"
 
 	"github.com/comethale/dice-online/app/api/shared/repositories/usermanagement/repository"
+	"github.com/comethale/dice-online/app/api/shared/session"
+	"github.com/comethale/dice-online/app/api/shared/utils"
 
 	"github.com/comethale/dice-online/app/api/shared/database"
 )
@@ -91,115 +93,78 @@ func UserCreate(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// // UpdateUser takes a POST request and updates a user
-// func UpdateUser(w http.ResponseWriter, r *http.Request) {
-// 	switch r.Method {
-// 	case http.MethodPost:
-// 		repo := repository.NewUserRepository(database.POSTGRESQL)
+// UserLogin logs in the given user
+func UserLogin(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		repo := repository.NewUserRepository(database.POSTGRESQL)
 
-// 		err := r.ParseForm()
+		err := r.ParseForm()
 
-// 		if err != nil {
-// 			http.Error(w, err.Error(), http.StatusInternalServerError)
-// 		}
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
-// 		id, err := strconv.Atoi(r.FormValue("id"))
+		email := r.FormValue("email")
+		password := r.FormValue("password")
 
-// 		if err != nil {
-// 			http.Error(w, err.Error(), http.StatusInternalServerError)
-// 		}
+		if email == "" || password == "" {
+			http.Error(w, "400 Bad Request", http.StatusBadRequest)
+			return
+		}
 
-// 		username := r.FormValue("username")
-// 		email := r.FormValue("email")
-// 		password := r.FormValue("password")
+		hashedInputPassword, err := utils.AuthHashPassword(password)
 
-// 		user, err := repo.Update(email, password, username, 0, int64(id))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
-// 		if err != nil {
-// 			http.Error(w, err.Error(), http.StatusInternalServerError)
-// 		}
+		DBPassword, err := repo.GetPassword(email)
 
-// 		json, err := json.Marshal(user)
-// 		w.Header().Set("Content-Type", "application/json")
-// 		w.Write(json)
+		// create session
+		session := session.Instance(r, email)
 
-// 	default:
-// 		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
-// 		return
-// 	}
-// }
+		loggedIn := utils.AuthVerifyPassword(DBPassword, hashedInputPassword)
 
-// // UserDelete takes a DELETE request and deletes the given user from the database
-// func UserDelete(w http.ResponseWriter, r *http.Request) {
-// 	switch r.Method {
-// 	case http.MethodDelete:
-// 		repo := repository.NewUserRepository(database.POSTGRESQL)
+		if loggedIn != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
 
-// 		err := r.ParseForm()
+		// Set user as authenticated
+		session.Values["authenticated"] = true
+		session.Save(r, w)
 
-// 		if err != nil {
-// 			http.Error(w, err.Error(), http.StatusInternalServerError)
-// 		}
+		return
+	default:
+		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+}
 
-// 		id, err := strconv.Atoi(r.FormValue("id"))
+// UserLogout logs out the user and returns the index page
+func UserLogout(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		err := r.ParseForm()
 
-// 		if err != nil {
-// 			http.Error(w, err.Error(), http.StatusInternalServerError)
-// 		}
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
-// 		user, err := repo.Delete(int64(id))
+		email := r.FormValue("email")
+		session := session.Instance(r, email)
 
-// 		if err != nil {
-// 			http.Error(w, err.Error(), http.StatusInternalServerError)
-// 		}
+		// Revoke users authentication
+		session.Values["authenticated"] = false
+		session.Save(r, w)
+		return
 
-// 		json, err := json.Marshal(user)
-
-// 		if err != nil {
-// 			http.Error(w, err.Error(), http.StatusInternalServerError)
-// 		}
-
-// 		w.Header().Set("Content-Type", "application/json")
-// 		w.Write(json)
-// 	default:
-// 		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
-// 		return
-// 	}
-
-// }
-
-// // UserLogin logs in the given user
-// func UserLogin(w http.ResponseWriter, r *http.Request) {
-// 	switch r.Method {
-// 	case http.MethodPost:
-
-// 		err := r.ParseForm()
-
-// 		email := r.FormValue("email")
-// 		password := r.FormValue("password")
-
-// 		if email == "" || password == "" {
-// 			http.Error(w, "400 Bad Request", http.StatusBadRequest)
-// 			return
-// 		}
-
-// 		// create session
-
-// 	default:
-// 		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
-// 		return
-// 	}
-// }
-
-// // UserLogout logs out the user and returns the index page
-// func UserLogout(w http.ResponseWriter, r *http.Request) {
-// 	switch r.Method {
-// 	case http.MethodPost:
-// 		fmt.Println("logged out")
-
-// 		// mark session as inactive
-
-// 	default:
-// 		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
-// 	}
-// }
+	default:
+		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+}
