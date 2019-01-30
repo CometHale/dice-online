@@ -77,20 +77,17 @@ func UserCreate(w http.ResponseWriter, r *http.Request) {
 
 		user, err := repo.Create(email, password, username)
 
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
 		json, err := json.Marshal(user)
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
-		// log new user in
-		// create session
-		session := session.Instance(r, email)
-
-		// Set user as authenticated
-		session.Values["authenticated"] = true
-		session.Save(r, w)
 
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(json)
@@ -131,7 +128,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 
 		DBPassword, err := repo.GetPassword(email)
 
-		create session
+		// create session
 		session := session.Instance(r, email)
 
 		loggedIn := utils.AuthVerifyPassword(DBPassword, hashedInputPassword)
@@ -143,6 +140,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 		// Set user as authenticated
 		session.Values["authenticated"] = true
 		session.Save(r, w)
+
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Logged In."))
 

@@ -1,17 +1,17 @@
 <template>
-  <div id="auth">
-    <form id="sign-up" method="post" @submit.prevent="signup">
-      <input type="text" name="email" placeholder="email">
-      <input type="text" name="username" placeholder="username">
-      <input type="password" name="password" placeholder="password">
-      <button>Sign Up</button>
-    </form>
-    <form id="login" method="post" @submit.prevent="login">
-      <input type="text" name="email" placeholder="email">
-      <input type="password" name="password" placeholder="password">
-      <button>Login</button>
-    </form>
-  </div>
+    <div id="auth">
+      <form id="sign-up" method="post" @submit.prevent="signup">
+        <input type="text" name="email" placeholder="email">
+        <input type="text" name="username" placeholder="username">
+        <input type="password" name="password" placeholder="password">
+        <button>Sign Up</button>
+      </form>
+      <form id="login" method="post" @submit.prevent="login">
+        <input type="text" name="email" placeholder="email">
+        <input type="password" name="password" placeholder="password">
+        <button>Login</button>
+      </form>
+    </div>
 </template>
 
 <script>
@@ -20,18 +20,20 @@ import qs from 'qs';
 
 export default {
   name: 'Auth',
-  props:["isHidden"],
   methods: {
     signup: function (Event) {
+      
       var email = Event.target.elements.email.value
       var username = Event.target.elements.username.value
       var password = Event.target.elements.password.value
+      var $this = this
+
       const data = {
         'email':email,
         'username':username,
         'password':password
       }
- 
+
       axios({
         method:'post',
         url:'http://localhost:3000/user-create/',
@@ -39,9 +41,8 @@ export default {
         config: {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
       }).then(function (response) {
         //handle success
-        console.log(response);
-        var auth = document.getElementById("auth")
-        auth.style.display = "none";
+        $this.$emit('clicked', response); // can't emit directly within axios
+
       }).catch(function (response) {
           //handle error
           console.log(response);
@@ -52,6 +53,7 @@ export default {
     login: function (Event){
       var email = Event.target.elements.email.value
       var password = Event.target.elements.password.value
+      var $this = this
       const data = {
         'email':email,
         'password':password
@@ -64,10 +66,7 @@ export default {
         config: {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
       }).then(function (response) {
           //handle success
-          console.log(response);
-          var auth = document.getElementById("auth")
-          auth.style.display = "none";
-          
+          $this.$emit('clicked', response); // can't emit directly within axios
       }).catch(function (response) {
           //handle error
           console.log(response);
@@ -76,7 +75,6 @@ export default {
     }
   }
 }
-
 
 </script>
  

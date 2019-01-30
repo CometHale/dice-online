@@ -28,7 +28,7 @@ func (repo *UserRepository) Get(id int64) (*domain.User, error) {
 	var username string
 	var highscore int64
 
-	err := repo.db.QueryRow(stmt).Scan(&email, &username, &highscore)
+	err := repo.db.QueryRow(stmt, id).Scan(&email, &username, &highscore)
 
 	if err != nil {
 		log.Panicln(err)

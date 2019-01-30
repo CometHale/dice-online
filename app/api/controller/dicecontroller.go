@@ -59,7 +59,7 @@ func rollDicePost(w http.ResponseWriter, r *http.Request, game *Game) {
 
 	game.UserID = int64(userID)
 
-	goal, err := strconv.Atoi(r.FormValue("userid"))
+	goal, err := strconv.Atoi(r.FormValue("goal"))
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
