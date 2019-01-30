@@ -10,6 +10,7 @@ import (
 
 	"github.com/comethale/dice-online/app/api/route"
 	"github.com/comethale/dice-online/app/api/shared/database"
+	"github.com/comethale/dice-online/app/api/shared/session"
 
 	"github.com/comethale/dice-online/app/api/shared/server"
 )
@@ -24,6 +25,9 @@ func main() {
 
 	// retrieve and unmarshal the configuration information
 	LoadConfig("config"+string(os.PathSeparator)+"config.json", &config)
+
+	// Configure the session cookie store
+	session.Configure(config.Session)
 
 	// initiate database connection
 	database.LoadDatabase(config.PostgreSQL)
@@ -43,6 +47,7 @@ var config configuration
 type configuration struct {
 	PostgreSQL database.PostgreSQLInfo `json:"PostgreSQL"`
 	Server     server.Server           `json:"Server"`
+	Session    session.Session         `json:"Session"`
 }
 
 // LoadConfig loads the confiugration file and unmarshals it into the settings variable

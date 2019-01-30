@@ -6,7 +6,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -92,115 +91,115 @@ func UserCreate(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// UpdateUser takes a POST request and updates a user
-func UpdateUser(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodPost:
-		repo := repository.NewUserRepository(database.POSTGRESQL)
+// // UpdateUser takes a POST request and updates a user
+// func UpdateUser(w http.ResponseWriter, r *http.Request) {
+// 	switch r.Method {
+// 	case http.MethodPost:
+// 		repo := repository.NewUserRepository(database.POSTGRESQL)
 
-		err := r.ParseForm()
+// 		err := r.ParseForm()
 
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
+// 		if err != nil {
+// 			http.Error(w, err.Error(), http.StatusInternalServerError)
+// 		}
 
-		id, err := strconv.Atoi(r.FormValue("id"))
+// 		id, err := strconv.Atoi(r.FormValue("id"))
 
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
+// 		if err != nil {
+// 			http.Error(w, err.Error(), http.StatusInternalServerError)
+// 		}
 
-		username := r.FormValue("username")
-		email := r.FormValue("email")
-		password := r.FormValue("password")
+// 		username := r.FormValue("username")
+// 		email := r.FormValue("email")
+// 		password := r.FormValue("password")
 
-		user, err := repo.Update(email, password, username, int64(id))
+// 		user, err := repo.Update(email, password, username, 0, int64(id))
 
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
+// 		if err != nil {
+// 			http.Error(w, err.Error(), http.StatusInternalServerError)
+// 		}
 
-		json, err := json.Marshal(user)
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(json)
+// 		json, err := json.Marshal(user)
+// 		w.Header().Set("Content-Type", "application/json")
+// 		w.Write(json)
 
-	default:
-		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
-		return
-	}
-}
+// 	default:
+// 		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
+// 		return
+// 	}
+// }
 
-// UserDelete takes a DELETE request and deletes the given user from the database
-func UserDelete(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodDelete:
-		repo := repository.NewUserRepository()
+// // UserDelete takes a DELETE request and deletes the given user from the database
+// func UserDelete(w http.ResponseWriter, r *http.Request) {
+// 	switch r.Method {
+// 	case http.MethodDelete:
+// 		repo := repository.NewUserRepository(database.POSTGRESQL)
 
-		err := r.ParseForm()
+// 		err := r.ParseForm()
 
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
+// 		if err != nil {
+// 			http.Error(w, err.Error(), http.StatusInternalServerError)
+// 		}
 
-		id, err := strconv.Atoi(r.FormValue("id"))
+// 		id, err := strconv.Atoi(r.FormValue("id"))
 
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
+// 		if err != nil {
+// 			http.Error(w, err.Error(), http.StatusInternalServerError)
+// 		}
 
-		user, err := repo.Delete(int64(id))
+// 		user, err := repo.Delete(int64(id))
 
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
+// 		if err != nil {
+// 			http.Error(w, err.Error(), http.StatusInternalServerError)
+// 		}
 
-		json, err := json.Marshal(user)
+// 		json, err := json.Marshal(user)
 
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
+// 		if err != nil {
+// 			http.Error(w, err.Error(), http.StatusInternalServerError)
+// 		}
 
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(json)
-	default:
-		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
-		return
-	}
+// 		w.Header().Set("Content-Type", "application/json")
+// 		w.Write(json)
+// 	default:
+// 		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
+// 		return
+// 	}
 
-}
+// }
 
-// UserLogin logs in the given user
-func UserLogin(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodPost:
+// // UserLogin logs in the given user
+// func UserLogin(w http.ResponseWriter, r *http.Request) {
+// 	switch r.Method {
+// 	case http.MethodPost:
 
-		err := r.ParseForm()
+// 		err := r.ParseForm()
 
-		email := r.FormValue("email")
-		password := r.FormValue("password")
+// 		email := r.FormValue("email")
+// 		password := r.FormValue("password")
 
-		if email == "" || password == "" {
-			http.Error(w, "400 Bad Request", http.StatusBadRequest)
-			return
-		}
+// 		if email == "" || password == "" {
+// 			http.Error(w, "400 Bad Request", http.StatusBadRequest)
+// 			return
+// 		}
 
-		// create session
+// 		// create session
 
-	default:
-		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
-		return
-	}
-}
+// 	default:
+// 		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
+// 		return
+// 	}
+// }
 
-// UserLogout logs out the user and returns the index page
-func UserLogout(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodPost:
-		fmt.Println("logged out")
+// // UserLogout logs out the user and returns the index page
+// func UserLogout(w http.ResponseWriter, r *http.Request) {
+// 	switch r.Method {
+// 	case http.MethodPost:
+// 		fmt.Println("logged out")
 
-		// mark session as inactive
+// 		// mark session as inactive
 
-	default:
-		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
-	}
-}
+// 	default:
+// 		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
+// 	}
+// }
