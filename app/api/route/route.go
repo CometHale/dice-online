@@ -1,6 +1,7 @@
 package route
 
 import (
+	"goblr/app/api/controller"
 	"net/http"
 )
 
@@ -14,7 +15,7 @@ func routes() *http.ServeMux {
 	mux := http.NewServeMux()
 
 	// User
-	// mux.HandleFunc("/user-create/", controller.UserCreate)
+	mux.HandleFunc("/user-create/", controller.UserCreate)
 	// mux.HandleFunc("/user-delete/", controller.UserDelete)
 	// mux.HandleFunc("/user-login/", controller.UserLogin)
 	// mux.HandleFunc("/user-logout/", controller.UserLogout)
