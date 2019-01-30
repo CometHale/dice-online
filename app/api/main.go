@@ -30,7 +30,7 @@ func main() {
 	session.Configure(config.Session)
 
 	// initiate database connection
-	database.LoadDatabase(config.PostgreSQL)
+	database.ConnectPostgreSQL(config.PostgreSQL)
 
 	// start the server
 	server.Run(route.LoadRoutes(), nil, config.Server)

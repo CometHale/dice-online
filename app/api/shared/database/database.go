@@ -10,7 +10,13 @@ import (
 //POSTGRESQL is a global variable holding the database for the currently running app instance
 var POSTGRESQL *sql.DB
 
-// PostgreSQLInfo is a struct type holding conneciton information about a PostgreSQL database
+//Database organizes information about a given database
+type Database struct {
+	Type     string
+	Postgres PostgreSQLInfo
+}
+
+//PostgreSQLInfo collects all the data necessary to connect to a database
 type PostgreSQLInfo struct {
 	Username string
 	Password string
@@ -29,17 +35,18 @@ func postgresqldsn(ci PostgreSQLInfo) string {
 		"dbname=" + ci.Name + " " +
 		"host=" + ci.Host + " " +
 		"port=" + ci.Port + " " +
+		//"connection_timeout=" + ci.ConnectTimeout + " " +
 		"sslmode=" + ci.SSLMode
 }
 
-// LoadDatabase connects to the database described by the given PostgreSQLInfo
-func LoadDatabase(db PostgreSQLInfo) {
+//ConnectPostgreSQL connects to a given database
+func ConnectPostgreSQL(d PostgreSQLInfo) {
+	var err error
 
-	log.Println(db)
+	log.Println(d)
 
-	POSTGRESQL, err := sql.Open("postgres", postgresqldsn(db))
-
-	if err != nil {
+	//Connect to PostgreSQL
+	if POSTGRESQL, err = sql.Open("postgres", postgresqldsn(d)); err != nil {
 		log.Println("Postgres SQL Driver Error", err)
 	}
 

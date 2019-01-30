@@ -43,7 +43,7 @@ func (repo *UserRepository) GetPassword(email string) (string, error) {
 	stmt := `SELECT password FROM users WHERE email = $1`
 	var password string
 
-	err := repo.db.QueryRow(stmt).Scan(&password)
+	err := repo.db.QueryRow(stmt, email).Scan(&password)
 
 	if err != nil {
 		log.Panicln(err)
@@ -101,9 +101,9 @@ func (repo *UserRepository) Update(email, password, username string, highscore, 
 
 // Create creates a new User row in the db
 func (repo *UserRepository) Create(email, password, username string) (*domain.User, error) {
-	stmt := `INSERT INTO users (email, username, password) VALUES ($1, $2, $3) RETURNING id`
+	stmt := `INSERT INTO users (email, username, highscore, password) VALUES ($1, $2, $3, $4) RETURNING id`
 
-	var id int64
+	var id, highscore int64
 	var hashedPassword string
 
 	hashedPassword, err := utils.AuthHashPassword(password)
@@ -113,7 +113,7 @@ func (repo *UserRepository) Create(email, password, username string) (*domain.Us
 		return nil, err
 	}
 
-	err = repo.db.QueryRow(stmt, email, username, hashedPassword).Scan(&id)
+	err = repo.db.QueryRow(stmt, email, username, highscore, hashedPassword).Scan(&id)
 
 	if err != nil {
 		log.Panicln(err)

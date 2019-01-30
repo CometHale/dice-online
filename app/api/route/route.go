@@ -6,13 +6,15 @@ import (
 	"strconv"
 
 	"github.com/comethale/dice-online/app/api/controller"
+	"github.com/comethale/dice-online/app/api/route/middleware/cors"
+	"github.com/comethale/dice-online/app/api/route/middleware/logrequest"
 	"github.com/comethale/dice-online/app/api/shared/database"
 	"github.com/comethale/dice-online/app/api/shared/repositories/usermanagement/repository"
 )
 
 // LoadRoutes loads the routes for the application
 func LoadRoutes() http.Handler {
-	return routes()
+	return middleware(routes())
 }
 
 func routes() *http.ServeMux {
@@ -21,7 +23,7 @@ func routes() *http.ServeMux {
 	// User
 	mux.HandleFunc("/user-create/", controller.UserCreate)
 	mux.HandleFunc("/user-login/", controller.UserLogin)
-	// mux.HandleFunc("/user-logout/", controller.UserLogout)
+	mux.HandleFunc("/user-logout/", controller.UserLogout)
 
 	// View User
 	mux.HandleFunc("/view-high-score/", ViewUser)
@@ -98,4 +100,21 @@ func ViewUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+// *******************************
+// Middleware
+// *******************************
+
+func middleware(h http.Handler) http.Handler {
+	// Log every request
+	h = logrequest.Handler(h)
+
+	// Cors for swagger-ui
+	h = cors.Handler(h)
+
+	// Clear handler for Gorilla Context
+	// h = context.ClearHandler(h)
+
+	return h
 }

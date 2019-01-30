@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1>Dice Online</h1>
+    <Auth />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Auth from './components/Auth.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    Auth
   }
 }
 </script>
@@ -23,6 +23,18 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin:0;
+  background-image: linear-gradient(190deg, #0F2027 , #203A43, #2C5364);
+  height:100vh;
+  width:100vw;
+}
+
+h1{
+  margin:0;
+  color:white;
+}
+
+body{
+  margin:0;
 }
 </style>
