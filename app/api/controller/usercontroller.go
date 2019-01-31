@@ -6,6 +6,7 @@ package controller
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -111,18 +112,11 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		email := r.FormValue("email")
-		password := r.FormValue("password")
+		email := r.PostFormValue("email")
+		password := r.PostFormValue("password")
 
 		if email == "" || password == "" {
 			http.Error(w, "400 Bad Request", http.StatusBadRequest)
-			return
-		}
-
-		hashedInputPassword, err := utils.AuthHashPassword(password)
-
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
@@ -131,8 +125,10 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 		// create session
 		session := session.Instance(r, email)
 
-		loggedIn := utils.AuthVerifyPassword(DBPassword, hashedInputPassword)
+		loggedIn := utils.AuthVerifyPassword(password, DBPassword)
+
 		if loggedIn != nil {
+			log.Println(loggedIn)
 			http.Error(w, loggedIn.Error(), http.StatusUnauthorized)
 			return
 		}

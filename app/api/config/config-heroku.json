@@ -1,9 +1,9 @@
 {
     "PostgreSQL": {
-        "Username": "diceonline",
-        "Password": "FQceQFI5Ytn1CTMq4FMA6CLJA",
-        "Name": "diceonline",
-        "Host": "localhost",
+        "Username": "whjfwmblonydgd",
+        "Password": "6000dfb94d84010f65cd9cd309a2b26284e4973b954d81e003e4dfeafab20e0a",
+        "Name": "d4vic2tac9pkbh",
+        "Host": "ec2-107-20-185-27.compute-1.amazonaws.com",
         "Port": "5432",
         "SSLMode": "disable"
     },

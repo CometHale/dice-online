@@ -104,7 +104,6 @@ func (repo *UserRepository) Create(email, password, username string) (*domain.Us
 	stmt := `INSERT INTO users (email, username, highscore, password) VALUES ($1, $2, $3, $4) RETURNING id`
 
 	var id, highscore int64
-	var hashedPassword string
 
 	hashedPassword, err := utils.AuthHashPassword(password)
 

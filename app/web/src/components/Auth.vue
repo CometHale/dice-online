@@ -51,13 +51,14 @@ export default {
 
     }, 
     login: function (Event){
-      var email = Event.target.elements.email.value
-      var password = Event.target.elements.password.value
-      var $this = this
+      var email = Event.target.elements.email.value;
+      var password = Event.target.elements.password.value;
+
+      var $this = this;
       const data = {
         'email':email,
         'password':password
-      }
+      };
  
       axios({
         method:'post',
@@ -66,6 +67,7 @@ export default {
         config: {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
       }).then(function (response) {
           //handle success
+          console.log(response);
           $this.$emit('clicked', response); // can't emit directly within axios
       }).catch(function (response) {
           //handle error
