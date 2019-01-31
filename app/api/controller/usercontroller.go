@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/comethale/dice-online/app/api/model/domain"
 	"github.com/comethale/dice-online/app/api/shared/repositories/usermanagement/repository"
 	"github.com/comethale/dice-online/app/api/shared/session"
 	"github.com/comethale/dice-online/app/api/shared/utils"
@@ -108,6 +109,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 		err := r.ParseForm()
 
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -116,11 +118,12 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 		password := r.PostFormValue("password")
 
 		if email == "" || password == "" {
+			log.Println("400 Bad Request")
 			http.Error(w, "400 Bad Request", http.StatusBadRequest)
 			return
 		}
 
-		DBPassword, err := repo.GetPassword(email)
+		DBPassword, id, err := repo.GetPassword(email)
 
 		// create session
 		session := session.Instance(r, email)
@@ -137,8 +140,16 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 		session.Values["authenticated"] = true
 		session.Save(r, w)
 
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("Logged In."))
+		user := &domain.User{ID: id, Email: email}
+		json, err := json.Marshal(user)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(json)
 
 		return
 	default:

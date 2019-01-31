@@ -37,19 +37,20 @@ func (repo *UserRepository) Get(id int64) (*domain.User, error) {
 	return &domain.User{Email: email, Username: username, ID: id, HighScore: highscore}, nil
 }
 
-// GetPassword queries for and returns the password associated with the given Email
-func (repo *UserRepository) GetPassword(email string) (string, error) {
+// GetPassword queries for and returns the password and id associated with the given Email
+func (repo *UserRepository) GetPassword(email string) (string, int64, error) {
 	// This kind of function should not exist in any production-ready application
-	stmt := `SELECT password FROM users WHERE email = $1`
+	stmt := `SELECT password, id FROM users WHERE email = $1`
 	var password string
+	var id int64
 
-	err := repo.db.QueryRow(stmt, email).Scan(&password)
+	err := repo.db.QueryRow(stmt, email).Scan(&password, &id)
 
 	if err != nil {
 		log.Panicln(err)
 	}
 
-	return password, nil
+	return password, id, nil
 }
 
 // GetAll queries for and returns all Users
@@ -74,24 +75,22 @@ func (repo *UserRepository) GetAll() ([]*domain.User, error) {
 }
 
 // Update queries for the user with the given id and updates the row with the information given
-func (repo *UserRepository) Update(email, password, username string, highscore, id int64) (*domain.User, error) {
+func (repo *UserRepository) Update(email, username string, highscore, id int64) (*domain.User, error) {
 
 	if id == 0 {
 		log.Panicln("ID is a required value")
 		return nil, errors.New("missing User ID for (*UserRepository).Update")
 	}
 
-	stmt := `UPDATE users SET email = IsNull(@email, $1), password = IsNull(@password, $2), username = IsNull(@username, $3), highscore =  IsNull(@highscore, $4) WHERE id = $5 RETURNING email, username, highscore`
-	var hashedPassword string
+	// only update if the update value isn't null, and prevent empty updates
+	stmt := `UPDATE users SET email = COALESCE($1, email), ` +
+		`username = COALESCE($2, username), ` +
+		`highscore = COALESCE($3, highscore) ` +
+		`WHERE id = $4 ` +
+		`AND ($1 IS DISTINCT FROM email OR $2 IS DISTINCT FROM username OR $3 IS DISTINCT FROM highscore ) ` +
+		`RETURNING email, username, highscore`
 
-	hashedPassword, err := utils.AuthHashPassword(password)
-
-	if err != nil {
-		log.Panicln(err)
-		return nil, err
-	}
-
-	err = repo.db.QueryRow(stmt, MakeDBString(email), MakeDBString(hashedPassword), MakeDBInt(int(highscore)), id).Scan(&email, &username, &highscore)
+	err := repo.db.QueryRow(stmt, MakeDBString(email), MakeDBString(username), MakeDBInt(int(highscore)), id).Scan(&email, &username, &highscore)
 
 	if err != nil {
 		log.Panicln(err)

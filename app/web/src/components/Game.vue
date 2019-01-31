@@ -1,12 +1,18 @@
 <template>
-  <div id="game-background">
-    <div id="game">
-      <input @change="makeGuess" type="number" name="goal" placeholder="Guess what the dice will show">
-      <div id="dice">
-        <button @click="rollDice" id="game-button">Roll The Dice</button>
-        <Result />
+  <div id="game-background" v-if="userid != -1">
+    <div id="tabs">
+      <button @click="switchTab" id="game-tab" class="tab" v-bind:class="{ active: !showHighScores }">Play Game</button>
+      <button @click="switchTab" id="high-score-tab" class="tab" v-bind:class="{ active: showHighScores }">View High Scores</button>
+    </div>
+    <div id="pages">
+      <div id="game" v-if="!showHighScores">
+        <input id="goal-input" @change="makeGuess" type="number" name="goal" placeholder="Guess what the dice will show">
+        <div id="dice">
+          <button @click="rollDice" id="game-button">Roll The Dice</button>
+          <component v-bind:is="resultComponent" v-bind:userid="userid" v-bind:score="score" v-bind:result="result" v-bind:roll="roll" v-bind:goal="goal"></component>
+        </div>
       </div>
-      <HighScore />
+      <HighScore v-if="showHighScores" v-bind:userid="userid"  v-bind:userhighscore="userhighscore" v-bind:allusers="allusers"/>
     </div>
   </div>
 </template>
@@ -20,6 +26,18 @@ import qs from 'qs';
 export default {
   name: 'Game',
   props:["userid"],
+  data(){
+    return {
+      goal:-1,
+      result:false,
+      score:0,
+      userhighscore:0,
+      roll:-1,
+      resultComponent:"",
+      showHighScores:false,
+      allusers:[]
+    }
+  },
   components:{
     Result,
     HighScore
@@ -27,10 +45,33 @@ export default {
   methods:{
     makeGuess: function(Event){
 
-      var goal = Event.target.value
+      this.goal = Event.target.value
+      
       const data = {
         'userid': this.userid,
-        'goal': goal
+        'goal': this.goal
+      }
+
+      axios({
+        method:'post',
+        url:'http://localhost:3000/start-game/',
+        data: qs.stringify(data),
+        config: {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+      }).then(function (response) {
+        console.log(response);
+      }).catch(function (response) {
+          //handle error
+          console.log(response);
+          alert("An error occurred while setting up your game. Please try again later.")
+      });
+    },
+    rollDice: function(Event){
+
+      var $this = this;
+
+      const data = {
+        'userid': this.userid,
+        'goal': this.goal
       }
 
       axios({
@@ -39,52 +80,82 @@ export default {
         data: qs.stringify(data),
         config: {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
       }).then(function (response) {
-        console.log(response)
+        //handle success
+        $this.result = response.data["Result"]
+        $this.score = response.data["Score"]
+        $this.userhighscore = response.data["UserHighScore"]
+        $this.roll = response.data["Roll"]
+        $this.resultComponent = "Result"
+
       }).catch(function (response) {
           //handle error
           console.log(response);
-          alert("An error occurred while creating your account. Please try again later.")
+          alert("An error occurred while rolling the dice. Please try again later.")
       });
     },
-    rollDice: function(Event){
+    switchTab: function(Event){
+        if(!Event.target.classList.contains("active")){
+          this.showHighScores = !this.showHighScores;
 
-      var goal = Event.target.value
-      const data = {
-        'userid': this.userid,
-        'goal': goal
-      }
+          if(Event.target.id == "high-score-tab"){ // if the tab clicked was the high score tab
 
-      axios({
-        method:'get',
-        url:'http://localhost:3000/roll-dice/',
-        data: qs.stringify(data),
-        config: {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
-      }).then(function (response) {
-        //handle success
-        console.log(response);
+              var $this = this;
+            // get the high scores of all users
+            axios({
+              method:'get',
+              url:'http://localhost:3000/view-all/'
+            }).then(function (response) {
+              $this.allusers = response.data;
+              console.log(response);
+            }).catch(function (response) {
+                //handle error
+                console.log(response);
+                alert("An error occurred while querying for user high scores. Please try again later.")
+            });
 
-      }).catch(function (response) {
-          //handle error
-          console.log(response);
-          alert("An error occurred while creating your account. Please try again later.")
-      });
+          }
+        }
     }
   }
-
 }
 </script>
 
 <style scoped>
 
-  div#game-background{
+  #game-background{
     margin-top: 60px;
     display:flex;
-    flex-direction:column;
+    flex-direction:row;
     width:45%;
     min-height:200px;
     background-color:white;
     border-radius:3px;
-    justify-content: center;
+    justify-content: flex-end;
     align-items:center;
+  }
+
+  #pages{
+    display:flex;
+    flex-direction:column;
+  }
+
+  #tabs{
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    order:2;
+    right:-100px;
+
+  }
+
+  .active{
+    background-color:yellow;
+  }
+
+  .tab{
+    background-color:black;
+    width: 100px;
+    height:75px;
+    color:white;
   }
 </style>

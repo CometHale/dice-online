@@ -1,6 +1,10 @@
 <template>
   <div id="result">
-
+    <h2>Game Result</h2>
+    <p>The dice landed on {{ roll }}.</p>
+    <p>Your guess was {{ goal }}.</p>
+    <p v-if="goal == roll">You Won!</p>
+    <p v-if="goal != roll">You Lost</p>
   </div>
 </template>
 
@@ -8,6 +12,7 @@
 
 export default {
   name: 'Result',
+  props:['userid', "score", "result", "roll", "goal"]
 }
 </script>
 

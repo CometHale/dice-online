@@ -32,6 +32,7 @@ func routes() *http.ServeMux {
 	mux.HandleFunc("/view-all/", ViewAll)
 
 	// Game
+	mux.HandleFunc("/start-game/", controller.StartGame)
 	mux.HandleFunc("/roll-dice/", controller.RollDice)
 
 	return mux

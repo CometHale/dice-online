@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"log"
 	"math"
 	"math/rand"
 	"net/http"
@@ -14,22 +15,79 @@ import (
 // Game represents an instance of a game
 type Game struct {
 	Result        bool  `json:"Result"`
+	Roll          int64 `json:"Roll"`
 	Goal          int64 `json:"Goal"`
 	Score         int64 `json:"Score"`
 	UserID        int64 `json:"UserID"`
 	UserHighScore int64 `json:"UserHighScore"`
 }
 
-// RollDice takes a GET request and returns a dice roll result; or takes a POST request and initiates a game
-func RollDice(w http.ResponseWriter, r *http.Request) {
-	var game Game
-
+// StartGame takes a POST request and initiates a game
+func StartGame(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
-		rollDicePost(w, r, &game)
-	case http.MethodGet:
-		rollDiceGet(w, r, &game)
+		repo := repository.NewUserRepository(database.POSTGRESQL)
+		game, err := setUpGame(r, repo)
+
+		if err != nil {
+			log.Println(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		json, err := json.Marshal(game)
+
+		if err != nil {
+			log.Println(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(json)
+		return
 	default:
+		log.Println("405 Method Not Allowed")
+		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+}
+
+// RollDice takes a POST request and returns a dice roll result
+func RollDice(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		repo := repository.NewUserRepository(database.POSTGRESQL)
+		game, err := setUpGame(r, repo)
+
+		game.Roll = rand.Int63n(5) + 1 // random number between 1 and 6, inclusive
+
+		if game.Goal == game.Roll { // User won, increase the score
+			game.Result = true
+			game.Score++
+		} else { // User lost, set the User's highest score
+
+			highscore := int64(math.Max(float64(game.Score), float64(game.UserHighScore)))
+			_, err := repo.Update("", "", highscore, game.UserID)
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+		}
+
+		json, err := json.Marshal(game)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(json)
+		return
+	default:
+		log.Println("405 Method Not Allowed")
 		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
@@ -39,91 +97,41 @@ func RollDice(w http.ResponseWriter, r *http.Request) {
 // Helper Functions
 // *****************************************************************************
 
-// performs the POST actions for RollDice
-func rollDicePost(w http.ResponseWriter, r *http.Request, game *Game) {
-	repo := repository.NewUserRepository(database.POSTGRESQL)
+// setUpGame parses the game information from the request and stores it in a Game struct
+func setUpGame(r *http.Request, repo *repository.UserRepository) (*Game, error) {
+	var game Game
 
 	err := r.ParseForm()
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		log.Println(err)
+		return nil, err
 	}
 
-	userID, err := strconv.Atoi(r.FormValue("userid"))
+	userID, err := strconv.Atoi(r.PostFormValue("userid"))
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		log.Println(err)
+		return nil, err
 	}
 
 	game.UserID = int64(userID)
-
-	goal, err := strconv.Atoi(r.FormValue("goal"))
+	goal, err := strconv.Atoi(r.PostFormValue("goal"))
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		log.Println(err)
+		return nil, err
 	}
 
 	game.Goal = int64(goal)
 
 	user, err := repo.Get(game.UserID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		log.Println(err)
+		return nil, err
 	}
 
 	game.UserHighScore = user.HighScore
 
-	json, err := json.Marshal(game)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(json)
-	return
-}
-
-// performs the GET actions for RollDice
-func rollDiceGet(w http.ResponseWriter, r *http.Request, game *Game) {
-	var roll int64
-	repo := repository.NewUserRepository(database.POSTGRESQL)
-	decoder := json.NewDecoder(r.Body)
-
-	err := decoder.Decode(&game)
-
-	if err != nil {
-		panic(err)
-	}
-
-	roll = rand.Int63n(5) + 1 // random number between 1 and 6, inclusive
-
-	if game.Goal == roll { // User won, increase the score
-		game.Result = true
-		game.Score++
-	} else { // User lost, set the User's highest score
-
-		highscore := int64(math.Max(float64(game.Score), float64(game.UserHighScore)))
-		_, err := repo.Update("", "", "", highscore, game.UserID)
-
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	}
-
-	json, err := json.Marshal(game)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(json)
-	return
+	return &game, nil
 }
