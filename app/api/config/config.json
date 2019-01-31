@@ -8,7 +8,7 @@
         "SSLMode": "disable"
     },
     "Server": {
-        "Hostname": "172.217.9.84",
+        "Hostname": "api-dot-dice-online.appspot.com",
         "UseHTTP": true,
         "UseHTTPS": false,
         "HTTPPort": 3000,
