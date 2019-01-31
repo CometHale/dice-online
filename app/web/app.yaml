@@ -1,0 +1,14 @@
+runtime: nodejs10
+
+service: dice-online-web
+
+handlers:
+- url: /
+  static_files: public/index.html
+  upload: public/index.html
+
+- url: /.*
+  static_files: src/.*
+  upload: src/.*
+
+

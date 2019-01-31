@@ -11,6 +11,7 @@ import (
 	"github.com/comethale/dice-online/app/api/route"
 	"github.com/comethale/dice-online/app/api/shared/database"
 	"github.com/comethale/dice-online/app/api/shared/session"
+	"google.golang.org/appengine"
 
 	"github.com/comethale/dice-online/app/api/shared/server"
 )
@@ -34,6 +35,8 @@ func main() {
 
 	// start the server
 	server.Run(route.LoadRoutes(), nil, config.Server)
+
+	appengine.Main()
 }
 
 // *****************************************************************************
