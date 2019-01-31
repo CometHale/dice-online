@@ -2,6 +2,7 @@ package route
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -47,6 +48,7 @@ func ViewAll(w http.ResponseWriter, r *http.Request) {
 		users, err := repo.GetAll()
 
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -54,6 +56,7 @@ func ViewAll(w http.ResponseWriter, r *http.Request) {
 		json, err := json.Marshal(users)
 
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -62,6 +65,7 @@ func ViewAll(w http.ResponseWriter, r *http.Request) {
 		w.Write(json)
 		return
 	default:
+		log.Println("405 Method Not Allowed")
 		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
@@ -74,6 +78,7 @@ func ViewUser(w http.ResponseWriter, r *http.Request) {
 
 		userID, err := strconv.Atoi(r.URL.Query().Get("userid"))
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -82,6 +87,7 @@ func ViewUser(w http.ResponseWriter, r *http.Request) {
 		user, err := repo.Get(int64(userID))
 
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -89,6 +95,7 @@ func ViewUser(w http.ResponseWriter, r *http.Request) {
 		json, err := json.Marshal(user)
 
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -97,6 +104,7 @@ func ViewUser(w http.ResponseWriter, r *http.Request) {
 		w.Write(json)
 		return
 	default:
+		log.Println("405 Method Not Allowed")
 		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}

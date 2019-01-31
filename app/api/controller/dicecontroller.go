@@ -71,6 +71,7 @@ func RollDice(w http.ResponseWriter, r *http.Request) {
 			_, err := repo.Update("", "", highscore, game.UserID)
 
 			if err != nil {
+				log.Println(err)
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
@@ -79,6 +80,7 @@ func RollDice(w http.ResponseWriter, r *http.Request) {
 		json, err := json.Marshal(game)
 
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}

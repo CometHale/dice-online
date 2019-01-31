@@ -27,12 +27,14 @@ func UserGet(w http.ResponseWriter, r *http.Request) {
 		err := r.ParseForm()
 
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 
 		id, err := strconv.Atoi(r.FormValue("id"))
 
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 
@@ -41,6 +43,7 @@ func UserGet(w http.ResponseWriter, r *http.Request) {
 		json, err := json.Marshal(user)
 
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -62,6 +65,7 @@ func UserCreate(w http.ResponseWriter, r *http.Request) {
 		err := r.ParseForm()
 
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -80,6 +84,7 @@ func UserCreate(w http.ResponseWriter, r *http.Request) {
 		user, err := repo.Create(email, password, username)
 
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -87,6 +92,7 @@ func UserCreate(w http.ResponseWriter, r *http.Request) {
 		json, err := json.Marshal(user)
 
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -165,6 +171,7 @@ func UserLogout(w http.ResponseWriter, r *http.Request) {
 		err := r.ParseForm()
 
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
