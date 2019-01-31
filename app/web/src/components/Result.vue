@@ -1,10 +1,12 @@
 <template>
   <div id="result">
-    <h2>Game Result</h2>
-    <p>The dice landed on {{ roll }}.</p>
-    <p>Your guess was {{ goal }}.</p>
-    <p v-if="goal == roll">You Won!</p>
-    <p v-if="goal != roll">You Lost</p>
+    <h3>Game Result</h3>
+    <div>
+      <p>The dice landed on {{ roll }}.</p>
+      <p>Your guess was {{ goal }}.</p>
+      <p v-if="goal == roll">You Won!</p>
+      <p v-if="goal != roll">You Lost.</p>
+    </div>
   </div>
 </template>
 
@@ -16,20 +18,19 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+
+
+#result{
+  display:flex;
+  margin:auto auto;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+
+p{
+  margin:0;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+
+div{
+  min-height:auto;
 }
 </style>

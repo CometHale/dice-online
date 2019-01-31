@@ -34,6 +34,7 @@ export default {
 <style>
 #app {
   display:flex;
+  flex-wrap:nowrap;
   flex-direction:column;
   align-content: center;
   align-items: center;
@@ -58,7 +59,70 @@ body{
   margin:0;
 }
 
+div {
+  display:flex;
+  flex-direction:column;
+  flex-wrap:wrap;
+  justify-content: center;
+  align-items:center;
 
+  min-width:100px;
+  min-height:200px;
+  border-radius:3px;
+}
+
+input{
+  margin-bottom:5px;
+  font-weight: bold;
+  width:100%;
+  font-size:12px;
+  height:34px;
+
+  border:none;
+  border-radius:3px;
+  
+}
+
+
+input::-webkit-input-placeholder {
+  text-align: center;
+  line-height:34px; /* must match height of input to vertically center*/
+}
+
+input:-moz-placeholder { /* Firefox 18- */
+  text-align: center;
+  line-height:34px; /* must match height of input to vertically center*/
+}
+
+input::-moz-placeholder {  /* Firefox 19+ */
+  text-align: center;
+  line-height:34px; /* must match height of input to vertically center*/
+}
+
+input:-ms-input-placeholder {  
+  text-align: center;
+  line-height:34px; /* must match height of input to vertically center*/
+}
+
+button{
+  width:200px;
+  min-height:50px;
+  border:none;
+  background-color:rgb(65, 124, 150);
+  color:black;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin-left:auto;
+  margin-right:auto;
+  margin-bottom:10px;
+  font-weight: bold;
+  font-size:15px;
+}
+
+button:hover{
+  background-color:cadetblue;
+}
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
 }

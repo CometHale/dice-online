@@ -1,14 +1,15 @@
 <template>
   <div id="game-background" v-if="userid != -1">
     <div id="tabs">
-      <button @click="switchTab" id="game-tab" class="tab" v-bind:class="{ active: !showHighScores }">Play Game</button>
-      <button @click="switchTab" id="high-score-tab" class="tab" v-bind:class="{ active: showHighScores }">View High Scores</button>
+      <button @click="switchTab" id="game-tab" class="tab" v-bind:class="{ active: !showHighScores, inactive:showHighScores}">Play Game</button>
+      <button @click="switchTab" id="high-score-tab" class="tab" v-bind:class="{ active: showHighScores, inactive:!showHighScores}">View High Scores</button>
     </div>
     <div id="pages">
       <div id="game" v-if="!showHighScores">
-        <input id="goal-input" @change="makeGuess" type="number" name="goal" placeholder="Guess what the dice will show">
-        <div id="dice">
-          <button @click="rollDice" id="game-button">Roll The Dice</button>
+        <p id="instructions" v-if="resultComponent == ''">Guess what the dice will show, and then hit the button to roll it!</p>
+        <div id="dice-game">
+          <input id="goal-input" @change="makeGuess" type="number" name="goal" placeholder="Guess the dice roll">
+          <button @click="rollDice" id="game-button">Roll the dice</button>
           <component v-bind:is="resultComponent" v-bind:userid="userid" v-bind:score="score" v-bind:result="result" v-bind:roll="roll" v-bind:goal="goal"></component>
         </div>
       </div>
@@ -66,7 +67,7 @@ export default {
       });
     },
     rollDice: function(Event){
-
+  
       var $this = this;
 
       const data = {
@@ -86,6 +87,11 @@ export default {
         $this.userhighscore = response.data["UserHighScore"]
         $this.roll = response.data["Roll"]
         $this.resultComponent = "Result"
+
+
+        // hide the game instructions
+        var instructions = document.getElementById("instructions");
+        instructions.style.display = "none";
 
       }).catch(function (response) {
           //handle error
@@ -125,10 +131,10 @@ export default {
   #game-background{
     margin-top: 60px;
     display:flex;
-    flex-direction:row;
-    width:45%;
+    flex-direction:column-reverse;
+    width:45vw;
     min-height:200px;
-    background-color:white;
+    background-image: linear-gradient(-190deg, whitesmoke , #d7d2cc);
     border-radius:3px;
     justify-content: flex-end;
     align-items:center;
@@ -137,25 +143,75 @@ export default {
   #pages{
     display:flex;
     flex-direction:column;
+    width:100%;
+  }
+
+  #game{
+    width:100%;
+    flex-direction:column;
+    justify-content: space-evenly;
+  }
+
+  input{
+    width:auto;    
+  }
+
+  p{
+    text-align:center;
+    width:50%;
+    margin:0;
+  }
+
+  button{
+    width:auto;
+    min-height: 36px;
+    font-size:12px;
+  }
+
+
+  #dice-game{
+    min-height:auto;
+    width:90%;
+    flex-direction:row;
+    justify-content: space-between;
   }
 
   #tabs{
     display:flex;
-    flex-direction:column;
-    position:relative;
-    order:2;
-    right:-100px;
-
-  }
-
-  .active{
-    background-color:yellow;
+    flex-direction:row;
+    position:fixed;
+    min-height:40px;
+    top:200px;
+    left:197px;
+    z-index:2;
   }
 
   .tab{
-    background-color:black;
+    background-color:whitesmoke;
     width: 100px;
-    height:75px;
-    color:white;
+    height:40px;
+    color:black;
+    border:none;
+    font-weight:bold;
+    font-size:12px;
   }
+
+  #game-tab{
+    border-top-left-radius: 3px;
+  }
+
+  #high-score-tab{
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: -3px;
+  }
+
+  .active{
+    text-decoration: underline;
+  }
+
+  .inactive{
+    background-color:lightgray;
+  }
+
+
 </style>
