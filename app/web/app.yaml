@@ -5,7 +5,7 @@ service: default
 handlers:
 - url: /
   static_files: public/index.html
-  upload: public/index.html, src/*
+  upload: public/index.html
 
 - url: /.*
   script: auto
