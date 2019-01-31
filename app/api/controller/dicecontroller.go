@@ -10,6 +10,7 @@ import (
 
 	"github.com/comethale/dice-online/app/api/shared/database"
 	"github.com/comethale/dice-online/app/api/shared/repositories/usermanagement/repository"
+	glog "google.golang.org/appengine/log"
 )
 
 // Game represents an instance of a game
@@ -31,6 +32,7 @@ func StartGame(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			log.Println(err)
+			glog.Errorf(nil, err.Error(), nil)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -39,6 +41,7 @@ func StartGame(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			log.Println(err)
+			glog.Errorf(nil, err.Error(), nil)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -72,6 +75,7 @@ func RollDice(w http.ResponseWriter, r *http.Request) {
 
 			if err != nil {
 				log.Println(err)
+				glog.Errorf(nil, err.Error(), nil)
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
@@ -81,6 +85,7 @@ func RollDice(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			log.Println(err)
+			glog.Errorf(nil, err.Error(), nil)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -107,6 +112,7 @@ func setUpGame(r *http.Request, repo *repository.UserRepository) (*Game, error) 
 
 	if err != nil {
 		log.Println(err)
+		glog.Errorf(nil, err.Error(), nil)
 		return nil, err
 	}
 
@@ -114,6 +120,7 @@ func setUpGame(r *http.Request, repo *repository.UserRepository) (*Game, error) 
 
 	if err != nil {
 		log.Println(err)
+		glog.Errorf(nil, err.Error(), nil)
 		return nil, err
 	}
 
@@ -122,6 +129,7 @@ func setUpGame(r *http.Request, repo *repository.UserRepository) (*Game, error) 
 
 	if err != nil {
 		log.Println(err)
+		glog.Errorf(nil, err.Error(), nil)
 		return nil, err
 	}
 
@@ -130,6 +138,7 @@ func setUpGame(r *http.Request, repo *repository.UserRepository) (*Game, error) 
 	user, err := repo.Get(game.UserID)
 	if err != nil {
 		log.Println(err)
+		glog.Errorf(nil, err.Error(), nil)
 		return nil, err
 	}
 

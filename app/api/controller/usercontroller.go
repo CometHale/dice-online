@@ -16,6 +16,7 @@ import (
 	"github.com/comethale/dice-online/app/api/shared/utils"
 
 	"github.com/comethale/dice-online/app/api/shared/database"
+	glog "google.golang.org/appengine/log"
 )
 
 // UserGet takes a GET request and returns a user from the database
@@ -28,6 +29,7 @@ func UserGet(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			log.Println(err)
+			glog.Errorf(nil, err.Error(), nil)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 
@@ -35,6 +37,7 @@ func UserGet(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			log.Println(err)
+			glog.Errorf(nil, err.Error(), nil)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 
@@ -44,6 +47,7 @@ func UserGet(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			log.Println(err)
+			glog.Errorf(nil, err.Error(), nil)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}

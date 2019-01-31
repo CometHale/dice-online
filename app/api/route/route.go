@@ -11,6 +11,7 @@ import (
 	"github.com/comethale/dice-online/app/api/route/middleware/logrequest"
 	"github.com/comethale/dice-online/app/api/shared/database"
 	"github.com/comethale/dice-online/app/api/shared/repositories/usermanagement/repository"
+	glog "google.golang.org/appengine/log"
 )
 
 // LoadRoutes loads the routes for the application
@@ -49,6 +50,7 @@ func ViewAll(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			log.Println(err)
+			glog.Errorf(nil, err.Error(), nil)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -57,6 +59,7 @@ func ViewAll(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			log.Println(err)
+			glog.Errorf(nil, err.Error(), nil)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
