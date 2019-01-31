@@ -2,7 +2,7 @@
     "PostgreSQL": {
         "Username": "diceonline",
         "Password": "FQceQFI5Ytn1CTMq4FMA6CLJA",
-        "Name": "dice-online",
+        "Name": "diceonline",
         "Host": "35.188.140.183",
         "Port": "5432",
         "SSLMode": "disable"
