@@ -11,7 +11,7 @@
         "Hostname": "api-dot-dice-online.appspot.com",
         "UseHTTP": true,
         "UseHTTPS": false,
-        "HTTPPort": 3000,
+        "HTTPPort": 80,
         "HTTPSPort": 443,
         "CertFile": "tls/server.crt",
         "KeyFile": "tls/server.key"

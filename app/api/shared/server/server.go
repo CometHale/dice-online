@@ -39,7 +39,6 @@ func Run(httpHandlers http.Handler, httpsHandlers http.Handler, server Server) {
 // startHTTP starts the HTTP listener
 func startHTTP(handlers http.Handler, server Server) {
 	fmt.Println(time.Now().Format("2006-01-02 03:04:05 PM"), "Running HTTP "+httpAddress(server))
-
 	// Start the HTTP listener
 	log.Fatal(http.ListenAndServe(httpAddress(server), handlers))
 }
