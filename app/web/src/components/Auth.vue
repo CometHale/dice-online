@@ -1,16 +1,22 @@
 <template>
     <div id="auth">
-      <form id="sign-up" method="post" @submit.prevent="signup">
-        <input type="text" name="email" placeholder="email">
-        <input type="text" name="username" placeholder="username">
-        <input type="password" name="password" placeholder="password">
-        <button>Sign Up</button>
-      </form>
-      <form id="login" method="post" @submit.prevent="login">
-        <input type="text" name="email" placeholder="email">
-        <input type="password" name="password" placeholder="password">
-        <button>Login</button>
-      </form>
+      <div class="form-wrapper">
+        <h2>Create an Account</h2>
+        <form id="sign-up" method="post" @submit.prevent="signup">
+          <input type="text" name="email" placeholder="email">
+          <input type="text" name="username" placeholder="username">
+          <input type="password" name="password" placeholder="password">
+          <button>Sign Up</button>
+        </form>
+      </div>
+      <div class="form-wrapper">
+        <h2>Login</h2>
+        <form id="login" method="post" @submit.prevent="login">
+          <input type="text" name="email" placeholder="email">
+          <input type="password" name="password" placeholder="password">
+          <button>Login</button>
+        </form>
+      </div>
     </div>
 </template>
 
@@ -83,7 +89,6 @@ export default {
 <style scoped>
 
 #auth{
-
   display:flex;
   flex-direction:row;
   width:100%;
@@ -92,14 +97,14 @@ export default {
   padding-top:60px;
 }
 
-form {
+.form-wrapper{
+  background-image: linear-gradient(-190deg, white , #d7d2cc);
+}
+
+form{
   display:flex;
   flex-direction:column;
-  width:45%;
-  min-height:200px;
-  background-color:white;
-  border-radius:3px;
-  justify-content: center;
-  align-items:center;
+  padding: 25px 75px;
 }
+
 </style>
