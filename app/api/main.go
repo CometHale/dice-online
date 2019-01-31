@@ -16,7 +16,7 @@ import (
 	"github.com/comethale/dice-online/app/api/shared/server"
 )
 
-func init() {
+func main() {
 
 	// Logging, verbose with file name and line number
 	log.SetFlags(log.Lshortfile)
@@ -35,9 +35,6 @@ func init() {
 
 	// start the server
 	server.Run(route.LoadRoutes(), nil, config.Server)
-}
-
-func main() {
 
 	appengine.Main()
 }
