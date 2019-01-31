@@ -42,7 +42,7 @@ export default {
 
       axios({
         method:'post',
-        url:'http://localhost:3000/user-create/',
+        url:'https://api-dot-dice-online.appspot.com/user-create/',
         data: qs.stringify(data),
         config: {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
       }).then(function (response) {
@@ -68,7 +68,7 @@ export default {
  
       axios({
         method:'post',
-        url:'http://localhost:3000/user-login/',
+        url:'https://api-dot-dice-online.appspot.com/user-login/',
         data: qs.stringify(data),
         config: {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
       }).then(function (response) {

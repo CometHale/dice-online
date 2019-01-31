@@ -1,7 +1,7 @@
 runtime: go
 api_version: go1
 
-service: dice-online-api
+service: api
 
 handlers:
 - url: /.*

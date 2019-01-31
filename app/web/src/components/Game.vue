@@ -55,7 +55,7 @@ export default {
 
       axios({
         method:'post',
-        url:'http://localhost:3000/start-game/',
+        url:'https://api-dot-dice-online.appspot.com/start-game/',
         data: qs.stringify(data),
         config: {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
       }).then(function (response) {
@@ -77,7 +77,7 @@ export default {
 
       axios({
         method:'post',
-        url:'http://localhost:3000/roll-dice/',
+        url:'https://api-dot-dice-online.appspot.com/roll-dice/',
         data: qs.stringify(data),
         config: {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
       }).then(function (response) {
@@ -109,7 +109,7 @@ export default {
             // get the high scores of all users
             axios({
               method:'get',
-              url:'http://localhost:3000/view-all/'
+              url:'https://api-dot-dice-online.appspot.com//view-all/'
             }).then(function (response) {
               $this.allusers = response.data;
               console.log(response);
