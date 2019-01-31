@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "start": "node src/main.js",
+    "start": "npm install -g @vue/cli; npm run serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
