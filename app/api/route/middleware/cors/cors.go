@@ -36,7 +36,7 @@ const (
 	allow_credentials string = "Access-Control-Allow-Credentials"
 	expose_headers    string = "Access-Control-Expose-Headers"
 	credentials       string = "true"
-	origin            string = "https://dice-online.appspot.com/"
+	origin            string = "Origin"
 	methods           string = "POST, GET, OPTIONS, PUT, DELETE, HEAD, PATCH"
 
 	// If you want to expose some other headers add it here
