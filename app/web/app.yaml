@@ -4,9 +4,9 @@ service: default
 
 handlers:
 - url: /
-  static_files: dist/index.html, dist/*
-  upload: dist/index.html, dist/*
+  static_files: dist/index.html
+  upload: dist/index.html
 
 - url: /(.*)
-  static_files: dist/*
-  upload: dist/*
+  static_files: dist/\1
+  upload: dist/(.*)
