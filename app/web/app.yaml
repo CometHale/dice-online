@@ -4,8 +4,8 @@ service: default
 
 handlers:
 - url: /
-  static_files: dist/
-  upload: dist/
+  static_files: dist/index.html
+  upload: dist/index.html
 
 - url: /.*
   script: auto
