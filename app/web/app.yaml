@@ -9,4 +9,4 @@ handlers:
 
 - url: /(.*)
   static_files: dist/
-  update: dist/
+  upload: dist/
