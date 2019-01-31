@@ -6,3 +6,6 @@ service: api
 handlers:
 - url: /.*
   script: _go_app
+
+http_headers:
+  Access-Control-Allow-Origin: https://dice-online.appspot.com/
