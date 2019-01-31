@@ -8,5 +8,5 @@ handlers:
   upload: dist/index.html
 
 - url: /(.*)
-  static_files: dist/
-  upload: dist/
+  static_files: dist/*
+  upload: dist/*
