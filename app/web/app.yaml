@@ -3,6 +3,6 @@ runtime: nodejs10
 service: default
 
 handlers:
-- url: /
-  static_files: ./dist/*
-  upload: ./dist/*
+- url: /(.*)
+  static_files: ./dist/
+  upload: ./dist/
