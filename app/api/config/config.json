@@ -8,7 +8,7 @@
         "SSLMode": "disable"
     },
     "Server": {
-        "Hostname": "localhost",
+        "Hostname": "172.217.9.84",
         "UseHTTP": true,
         "UseHTTPS": false,
         "HTTPPort": 3000,
