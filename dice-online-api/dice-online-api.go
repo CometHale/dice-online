@@ -5,6 +5,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"runtime"
 
@@ -33,7 +34,12 @@ func main() {
 	database.ConnectPostgreSQL()
 
 	// start the server
-	server.Run(route.LoadRoutes(), nil, config.Server)
+	port := os.Getenv("PORT")
+	if len(port) == 0 {
+		port = "3000"
+	}
+	log.Fatal(http.ListenAndServe(":"+port, route.LoadRoutes()))
+	// server.Run(route.LoadRoutes(), nil, config.Server)
 }
 
 // *****************************************************************************

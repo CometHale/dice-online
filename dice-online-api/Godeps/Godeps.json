@@ -2,15 +2,7 @@
 	"ImportPath": "dice-online-api",
 	"GoVersion": "go1.10",
 	"GodepVersion": "v80",
-	"Packages": [
-		"./..."
-	],
 	"Deps": [
-		{
-			"ImportPath": "github.com/DATA-DOG/go-sqlmock",
-			"Comment": "v1.3.0-37-g2a5889f",
-			"Rev": "2a5889fc86505da3080d80031b68d4ba8804f82a"
-		},
 		{
 			"ImportPath": "github.com/gorilla/context",
 			"Comment": "v1.1.1",
@@ -25,11 +17,6 @@
 			"ImportPath": "github.com/gorilla/sessions",
 			"Comment": "v1.1.1",
 			"Rev": "03b6f63cc43ef9c7240a635a5e22b13180e822b8"
-		},
-		{
-			"ImportPath": "github.com/julienschmidt/httprouter",
-			"Comment": "v1.1-63-gadbc77e",
-			"Rev": "adbc77eec0d91467376ca515bc3a14b8434d0f18"
 		},
 		{
 			"ImportPath": "github.com/lib/pq",

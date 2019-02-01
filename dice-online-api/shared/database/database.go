@@ -28,7 +28,7 @@ type PostgreSQLInfo struct {
 }
 
 // DSN returns the Data Source Name
-func postgresqldsn(ci PostgreSQLInfo) string {
+func postgresqldsn() string {
 	// Example: root:@tcp(localhost:3306)/ipaddressservices
 
 	return "user=" + os.Getenv("Username") + " " +
@@ -44,10 +44,10 @@ func postgresqldsn(ci PostgreSQLInfo) string {
 func ConnectPostgreSQL() {
 	var err error
 
-	log.Println(d)
+	// log.Println(d)
 
 	//Connect to PostgreSQL
-	if POSTGRESQL, err = sql.Open("postgres", postgresqldsn(d)); err != nil {
+	if POSTGRESQL, err = sql.Open("postgres", postgresqldsn()); err != nil {
 		log.Println("Postgres SQL Driver Error", err)
 	}
 
