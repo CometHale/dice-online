@@ -1,0 +1,22 @@
+{
+    "Server": {
+        "Hostname": "api-dot-dice-online.appspot.com",
+        "UseHTTP": true,
+        "UseHTTPS": true,
+        "HTTPPort": 80,
+        "HTTPSPort": 443,
+        "CertFile": "tls/server.crt",
+        "KeyFile": "tls/server.key"
+    },
+    "Session": {
+        "SecretKey": "@r4B?EThaSEh_drujR7P_hub=s#s2Pah",
+        "Name": "ipfindr",
+        "Options": {
+            "Path": "/",
+            "Domain": "https://api-dot-dice-online.appspot.com",
+            "MaxAge": 28800,
+            "Secure": false,
+            "HttpOnly": true
+        }
+    }
+}

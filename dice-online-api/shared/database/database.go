@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	_ "github.com/lib/pq"
 )
@@ -30,17 +31,17 @@ type PostgreSQLInfo struct {
 func postgresqldsn(ci PostgreSQLInfo) string {
 	// Example: root:@tcp(localhost:3306)/ipaddressservices
 
-	return "user=" + ci.Username + " " +
-		"password=" + ci.Password + " " +
-		"dbname=" + ci.Name + " " +
-		"host=" + ci.Host + " " +
-		"port=" + ci.Port + " " +
+	return "user=" + os.Getenv("Username") + " " +
+		"password=" + os.Getenv("Password") + " " +
+		"dbname=" + os.Getenv("Name") + " " +
+		"host=" + os.Getenv("Host") + " " +
+		"port=" + os.Getenv("Port") + " " +
 		//"connection_timeout=" + ci.ConnectTimeout + " " +
-		"sslmode=" + ci.SSLMode
+		"sslmode=" + os.Getenv("SSLMode")
 }
 
 //ConnectPostgreSQL connects to a given database
-func ConnectPostgreSQL(d PostgreSQLInfo) {
+func ConnectPostgreSQL() {
 	var err error
 
 	log.Println(d)
