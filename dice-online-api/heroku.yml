@@ -1,0 +1,4 @@
+language:
+  - go
+run:
+  web: dice-online-api
